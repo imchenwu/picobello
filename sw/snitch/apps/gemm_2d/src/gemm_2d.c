@@ -415,7 +415,7 @@ static inline int gemm_picobello(const gemm_args_t *args) {
 
             // Only compute cores participate in the tile computation
             if (!snrt_is_dm_core()) {
-                // uint32_t start_cycle = snrt_mcycle();
+                snrt_mcycle();
 
                 // Tile computation
                 sc_st_gemm_args_t sc_st_args;
@@ -455,16 +455,16 @@ static inline int gemm_picobello(const gemm_args_t *args) {
                 sc_st_args.k = tile_k;
                 sc_st_gemm(largs->gemm_fp, &sc_st_args);
 
-                // uint32_t end_cycle = snrt_mcycle();
+                snrt_mcycle();
             }
 
-            // Add the partial result tiles from the various clusters together
-            // in a logarithmic reduction fashion.
-            // Note: both compute and DMA cores participate in this step.
-            if (largs->parallelize_k && (comp_k == (cluster_k_tiles - 1))) {
-                snrt_global_reduction_dma(
-                    (double *)lcr, (double *)lc[c_buff_idx], tile_m * tile_n);
-            }
+            // // Add the partial result tiles from the various clusters together
+            // // in a logarithmic reduction fashion.
+            // // Note: both compute and DMA cores participate in this step.
+            // if (largs->parallelize_k && (comp_k == (cluster_k_tiles - 1))) {
+            //     snrt_global_reduction_dma(
+            //         (double *)lcr, (double *)lc[c_buff_idx], tile_m * tile_n);
+            // }
         }
 
         // Synchronize cores after every iteration

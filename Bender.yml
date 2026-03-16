@@ -13,7 +13,7 @@ dependencies:
   common_cells:       { git: "https://github.com/pulp-platform/common_cells.git",       rev: "snitch"                                   }
   cheshire:           { git: "https://github.com/pulp-platform/cheshire.git",           rev: "picobello"                                }
   snitch_cluster:     { git: "https://github.com/pulp-platform/snitch_cluster.git",     rev: "5d6c957c70e3824e2330d8308eb904724cd41cbe" }
-  floo_noc:           { git: "https://github.com/pulp-platform/FlooNoC.git",            version: "0.7.0"                                }
+  # floo_noc:           { git: "https://github.com/pulp-platform/FlooNoC.git",            version: "0.7.0"                                }
   obi:                { git: "https://github.com/pulp-platform/obi.git",                rev: "acfcd0f80c7539aa8da7821a66d9acf2074a5b4e" }
   redmule:            { git: "https://github.com/pulp-platform/redmule.git",            rev: "picobello"                                }
   hci:                { git: "https://github.com/pulp-platform/hci.git",                rev: "06fcba671e060f2e1b03b7ebe2d3e719f1557099" }
@@ -23,6 +23,7 @@ dependencies:
   axi_obi:            { path: "hw/axi_obi"                                                                                              }
   picobello-pd:       { path: "./pd"                                                                                                    }
   fhg_spu_cluster:    { path: "./.deps/fhg_spu_cluster"                                                                                 }
+  floo_noc:           { path: "../FlooNoC" }
 
 workspace:
   package_links:
@@ -48,22 +49,48 @@ sources:
   - hw/snitch_hwpe_subsystem.sv
   - hw/snitch_tcdm_aligner.sv
   # Level 2
-  - hw/cluster_tile.sv
-  - hw/cheshire_tile.sv
-  - hw/mem_tile.sv
-  - hw/spm_tile.sv
-  - hw/dummy_tile.sv
+  # - hw/cluster_tile.sv
+  # - hw/cheshire_tile.sv
+  # - hw/mem_tile.sv
+  # - hw/spm_tile.sv
+  # - hw/dummy_tile.sv
 
-  - target: not(asic)
+  - target: not(tmrg)
+    files:
+    - hw/cluster_tile.sv
+    - hw/cheshire_tile.sv
+    - hw/mem_tile.sv
+    - hw/spm_tile.sv
+    - hw/dummy_tile.sv
+    - hw/picobello_top.sv
+
+  - target: tmrg
+    files:
+    - hw/cluster_tileTMR.sv
+    - hw/cheshire_tileTMR.sv
+    - hw/mem_tileTMR.sv
+    - hw/spm_tileTMR.sv
+    - hw/dummy_tileTMR.sv
+    - hw/picobello_topTMR.sv
+
+  - target: all(not(asic), not(tmrg))
     files:
     - hw/fhg_spu_tile.sv
 
-  - target: asic
+  - target: all(not(asic), tmrg)
+    files:
+    - hw/fhg_spu_tileTMR.sv
+
+  - target: all(asic, not(tmrg))
     files:
     - .deps/fhg_spu_cluster/hw/fhg_spu_tile.sv
 
-  # Level 3
-  - hw/picobello_top.sv
+  - target: all(asic, tmrg)
+    files:
+    - hw/fhg_spu_tileTMR.sv
+
+  # # Level 3
+  # - hw/picobello_top.sv
 
   - target: any(simulation, test)
     include_dirs:

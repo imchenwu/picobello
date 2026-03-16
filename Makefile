@@ -40,6 +40,9 @@ BENDER_LOCK = $(PB_ROOT)/Bender.lock
 
 COMMON_TARGS += -t rtl -t cva6 -t cv64a6_imafdcsclic_sv39 -t snitch_cluster -t pb_gen_rtl
 SIM_TARGS += -t simulation -t test -t idma_test
+ifdef TMR
+    SIM_TARGS += -t tmrg
+endif
 
 #############
 # systemRDL #

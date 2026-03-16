@@ -47,3 +47,8 @@ modelsim.ini
 transcript
 logs
 **/*.log
+
+# claude
+.claude
+.claudeignore
+CLAUDE.md
