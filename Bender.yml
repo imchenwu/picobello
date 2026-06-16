@@ -55,7 +55,7 @@ sources:
   # - hw/spm_tile.sv
   # - hw/dummy_tile.sv
 
-  - target: not(tmrg)
+  - target: all(not(ctmr), not(ftmr))
     files:
     - hw/cluster_tile.sv
     - hw/cheshire_tile.sv
@@ -64,7 +64,7 @@ sources:
     - hw/dummy_tile.sv
     - hw/picobello_top.sv
 
-  - target: tmrg
+  - target: any(ctmr, ftmr)
     files:
     - hw/cluster_tileTMR.sv
     - hw/cheshire_tileTMR.sv
@@ -73,19 +73,19 @@ sources:
     - hw/dummy_tileTMR.sv
     - hw/picobello_topTMR.sv
 
-  - target: all(not(asic), not(tmrg))
+  - target: all(not(asic), not(ctmr), not(ftmr))
     files:
     - hw/fhg_spu_tile.sv
 
-  - target: all(not(asic), tmrg)
+  - target: all(not(asic), any(ctmr, ftmr))
     files:
     - hw/fhg_spu_tileTMR.sv
 
-  - target: all(asic, not(tmrg))
+  - target: all(asic, not(ctmr), not(ftmr))
     files:
     - .deps/fhg_spu_cluster/hw/fhg_spu_tile.sv
 
-  - target: all(asic, tmrg)
+  - target: all(asic, any(ctmr, ftmr))
     files:
     - hw/fhg_spu_tileTMR.sv
 

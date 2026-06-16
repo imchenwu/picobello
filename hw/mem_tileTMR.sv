@@ -108,10 +108,12 @@ module mem_tileTMR
     .floo_wide_iC   (router_floo_wide_inC),
     .floo_wide_oA   (router_floo_wide_outA),
     .floo_wide_oB   (router_floo_wide_outB),
-    .floo_wide_oC   (router_floo_wide_outC),
-    .tmrErrorA      (),
-    .tmrErrorB      (),
-    .tmrErrorC      ()
+    .floo_wide_oC   (router_floo_wide_outC)
+  `ifdef TARGET_FTMR
+    , .tmrErrorA       (              )
+    , .tmrErrorB       (              )
+    , .tmrErrorC       (              )
+  `endif
   );
 
   assign floo_req_oA                      = router_floo_req_outA[West:North];

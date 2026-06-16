@@ -31,7 +31,11 @@ module dummy_tile
   floo_rsp_t [Eject:North] router_floo_rsp_out, router_floo_rsp_in;
   floo_wide_t [Eject:North] router_floo_wide_out, router_floo_wide_in;
 
+`ifndef TARGET_STMR
   floo_nw_router #(
+`else
+  floo_nw_routerTMR #(
+`endif
     .AxiCfgN     (AxiCfgN),
     .AxiCfgW     (AxiCfgW),
     .RouteAlgo   (RouteCfgNoMcast.RouteAlgo),
@@ -44,8 +48,17 @@ module dummy_tile
     .floo_rsp_t  (floo_rsp_t),
     .floo_wide_t (floo_wide_t)
   ) i_router (
+  `ifndef TARGET_STMR
     .clk_i,
     .rst_ni,
+  `else
+    .clk_iA (clk_i),
+    .clk_iB (clk_i),
+    .clk_iC (clk_i),
+    .rst_niA (rst_ni),
+    .rst_niB (rst_ni),
+    .rst_niC (rst_ni),
+  `endif
     .test_enable_i,
     .id_i,
     .id_route_map_i('0),
@@ -55,6 +68,9 @@ module dummy_tile
     .floo_rsp_i    (router_floo_rsp_in),
     .floo_wide_i   (router_floo_wide_in),
     .floo_wide_o   (router_floo_wide_out)
+  `ifdef TARGET_STMR
+    , .tmrError       (               )
+  `endif
   );
 
   assign floo_req_o                      = router_floo_req_out[West:North];
